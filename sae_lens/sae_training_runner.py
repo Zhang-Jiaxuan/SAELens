@@ -52,8 +52,9 @@ class SAETrainingRunner:
             )
 
         self.cfg = cfg
-
-        if override_model is None:
+        # 增加cfg.use_cached_activations==False
+        # if override_model is None:
+        if override_model is None and cfg.use_cached_activations == False:
             self.model = load_model(
                 self.cfg.model_class_name,
                 self.cfg.model_name,

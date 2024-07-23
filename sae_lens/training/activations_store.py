@@ -406,8 +406,9 @@ class ActivationsStore:
                     )
                 else:
                     sequences.append(next(self.iterable_sequences))
-
-        return torch.stack(sequences, dim=0).to(self.model.W_E.device)
+        # 修改
+        # return torch.stack(sequences, dim=0).to(self.model.W_E.device)
+        return torch.stack(sequences, dim=0).to(self.device)
 
     @torch.no_grad()
     def get_activations(self, batch_tokens: torch.Tensor):
