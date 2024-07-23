@@ -326,6 +326,7 @@ class ActivationsStore:
             assert (
                 n_activations_on_disk >= self.total_training_tokens
             ), f"Only {n_activations_on_disk/1e6:.1f}M activations on disk, but total_training_tokens is {self.total_training_tokens/1e6:.1f}M."
+            print("使用存储好的activations来训练SAE")
 
     def apply_norm_scaling_factor(self, activations: torch.Tensor) -> torch.Tensor:
         return activations * self.estimated_norm_scaling_factor
