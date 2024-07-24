@@ -5,14 +5,17 @@ from typing import Tuple
 import torch
 from tqdm import tqdm
 
-from sae_lens.config import DTYPE_MAP, CacheActivationsRunnerConfig
+from sae_lens.config import DTYPE_MAP, CacheActivationsRunnerConfig,HfDataset
 from sae_lens.load_model import load_model
 from sae_lens.training.activations_store import ActivationsStore
 
 
 class CacheActivationsRunner:
 
-    def __init__(self, cfg: CacheActivationsRunnerConfig):
+    def __init__(self,
+                 cfg: CacheActivationsRunnerConfig,
+                 override_dataset: HfDataset | None = None
+                 ):
         self.cfg = cfg
         self.model = load_model(
             model_class_name=cfg.model_class_name,
@@ -20,9 +23,18 @@ class CacheActivationsRunner:
             device=cfg.device,
             model_from_pretrained_kwargs=cfg.model_from_pretrained_kwargs,
         )
+        # self.activations_store = ActivationsStore.from_config(
+        #     self.model,
+        #     cfg,
+        # )
+        if override_dataset is not None:
+            logging.warning(
+                f"正在使用覆盖的数据集{override_dataset},{cfg.dataset_path}不起作用"
+            )
         self.activations_store = ActivationsStore.from_config(
             self.model,
             cfg,
+            override_dataset=override_dataset,
         )
 
         self.file_extension = "safetensors"
@@ -60,7 +72,7 @@ class CacheActivationsRunner:
 
     @torch.no_grad()
     def run(self):
-
+        self.activations_store.track=False
         new_cached_activations_path = self.cfg.new_cached_activations_path
 
         # if the activations directory exists and has files in it, raise an exception
