@@ -3,7 +3,7 @@ from typing import Any, cast
 import torch
 from transformer_lens import HookedTransformer
 from transformer_lens.hook_points import HookedRootModule
-from transformers import LlamaForCausalLM, AutoTokenizer
+from transformers import LlamaForCausalLM, AutoTokenizer,LlamaTokenizer
 
 def load_model(
     model_class_name: str,
