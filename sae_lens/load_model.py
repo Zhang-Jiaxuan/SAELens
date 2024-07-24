@@ -3,7 +3,7 @@ from typing import Any, cast
 import torch
 from transformer_lens import HookedTransformer
 from transformer_lens.hook_points import HookedRootModule
-
+from transformers import LlamaForCausalLM, AutoTokenizer
 
 def load_model(
     model_class_name: str,
@@ -26,6 +26,20 @@ def load_model(
         return HookedTransformer.from_pretrained(
             model_name=model_name, device=device, **model_from_pretrained_kwargs
         )
+    elif model_class_name == "LlamaForCausalLM":
+        tokenizer = LlamaTokenizer.from_pretrained(MODEL_PATH)
+        hf_model = LlamaForCausalLM.from_pretrained(MODEL_PATH, low_cpu_mem_usage=True)
+        model = HookedTransformer.from_pretrained(
+            model_name,
+            hf_model=hf_model,
+            device="cpu",
+            fold_ln=False,
+            center_writing_weights=False,
+            center_unembed=False,
+            tokenizer=tokenizer,
+        )
+        model = model.to(device)
+        return model
     elif model_class_name == "HookedMamba":
         try:
             from mamba_lens import HookedMamba
