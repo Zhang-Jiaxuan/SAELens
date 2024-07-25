@@ -74,7 +74,7 @@ class CacheActivationsRunner:
     def shuffle_activations(self):
         cached_activtions_path=self.cfg.new_cached_activations_path
         assert cached_activations_path is not None
-        if !os.path.exists(cached_activations_path): 
+        if not os.path.exists(cached_activations_path): 
             raise Exception(
                 f"Activations directory ({cached_activations_path}) is not exists. Please generate activations first."
             )
