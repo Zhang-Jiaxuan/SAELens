@@ -29,17 +29,15 @@ def load_model(
     elif model_class_name == "LlamaForCausalLM":
         tokenizer = LlamaTokenizer.from_pretrained(model_name)
         hf_model = LlamaForCausalLM.from_pretrained(model_name, low_cpu_mem_usage=True)
-        model = HookedTransformer.from_pretrained(
+        return HookedTransformer.from_pretrained(
             model_name,
             hf_model=hf_model,
-            device="cpu",
-            fold_ln=False,
+            device=device,
             center_writing_weights=False,
             center_unembed=False,
             tokenizer=tokenizer,
         )
-        model = model.to(device)
-        return model
+        
     elif model_class_name == "HookedMamba":
         try:
             from mamba_lens import HookedMamba
