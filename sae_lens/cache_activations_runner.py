@@ -72,7 +72,7 @@ class CacheActivationsRunner:
 
     @torch.no_grad()
     def shuffle_activations(self):
-        cached_activtions_path=self.cfg.new_cached_activations_path
+        cached_activations_path=self.cfg.new_cached_activations_path
         assert cached_activations_path is not None
         if not os.path.exists(cached_activations_path): 
             raise Exception(
